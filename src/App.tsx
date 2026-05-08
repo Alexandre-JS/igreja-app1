@@ -11,7 +11,7 @@ import UserManagement from './pages/UserManagement';
 import TailwindTest from './pages/TailwindTest';
 import MainLayout from './components/MainLayout';
 import { supabase } from './services/supabase';
-import { canManageMembers } from './utils/permissions';
+import { canManageMembers, canManageUsers } from './utils/permissions';
 import { setupViewportHeight, fixIonicScroll } from './utils/viewport';
 import ViewMember from './pages/ViewMember';
 import About from './pages/About';
@@ -41,6 +41,7 @@ setupIonicReact();
 
 const App: React.FC = () => {
   const [hasPermission, setHasPermission] = useState<boolean>(false);
+  const [hasUserManagement, setHasUserManagement] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -91,11 +92,16 @@ const App: React.FC = () => {
   
   const checkPermissions = async () => {
     try {
-      const permitted = await canManageMembers();
+      const [permitted, userAdmin] = await Promise.all([
+        canManageMembers(),
+        canManageUsers(),
+      ]);
       setHasPermission(permitted);
+      setHasUserManagement(userAdmin);
     } catch (error) {
       console.error('Permission check error:', error);
       setHasPermission(false);
+      setHasUserManagement(false);
     }
   };
 
@@ -116,13 +122,19 @@ const App: React.FC = () => {
             {!isAuthenticated ? (
               <Redirect to="/login" />
             ) : (
-              <MainLayout hasPermission={hasPermission}>
+              <MainLayout hasPermission={hasPermission} hasUserManagement={hasUserManagement}>
                 <Switch>
                   <Route path="/app/home" component={Home} exact />
                   <Route path="/app/members" component={Members} exact />
-                  <Route path="/app/add" component={AddMember} exact />
-                  <Route path="/app/edit/:id" component={EditMember} exact />
-                  <Route path="/app/users" component={UserManagement} exact />
+                  <Route path="/app/add" exact>
+                    {hasPermission ? <AddMember /> : <Redirect to="/app/members" />}
+                  </Route>
+                  <Route path="/app/edit/:id" exact>
+                    {hasPermission ? <EditMember /> : <Redirect to="/app/members" />}
+                  </Route>
+                  <Route path="/app/users" exact>
+                    {hasUserManagement ? <UserManagement /> : <Redirect to="/app/home" />}
+                  </Route>
                   <Route path="/app/test-tailwind" component={TailwindTest} exact />
                   <Route path="/app/view/:id" component={ViewMember} exact />
                   <Route path="/app/about" component={About} exact />

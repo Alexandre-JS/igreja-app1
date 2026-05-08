@@ -1,97 +1,91 @@
-/* ============================================
-   TEMA PRINCIPAL - VARIÁVEIS CSS
-   ============================================ */
+/* =============================================
+   EKKLESIA — DESIGN TOKENS
+   Paleta primária: #4e73df  |  Base: branco
+   ============================================= */
 
-   :root {
-    /* Cores Primárias */
-    --ion-color-primary: #3880ff;
-    --ion-color-primary-rgb: 56, 128, 255;
-    --ion-color-primary-contrast: #ffffff;
-    --ion-color-primary-contrast-rgb: 255, 255, 255;
-    --ion-color-primary-shade: #3171e0;
-    --ion-color-primary-tint: #4c8dff;
-  
-    /* Cores Secundárias */
-    --ion-color-secondary: #0cd1e8;
-    --ion-color-secondary-rgb: 12, 209, 232;
-    --ion-color-secondary-contrast: #ffffff;
-    --ion-color-secondary-contrast-rgb: 255, 255, 255;
-    --ion-color-secondary-shade: #0bb8cc;
-    --ion-color-secondary-tint: #24d6ea;
-  
-    /* Cores de Status */
-    --ion-color-success: #10dc60;
-    --ion-color-success-rgb: 16, 220, 96;
-    --ion-color-success-contrast: #ffffff;
-    --ion-color-success-contrast-rgb: 255, 255, 255;
-    --ion-color-success-shade: #0ec254;
-    --ion-color-success-tint: #28e070;
-  
-    --ion-color-warning: #ffce00;
-    --ion-color-warning-rgb: 255, 206, 0;
-    --ion-color-warning-contrast: #000000;
-    --ion-color-warning-contrast-rgb: 0, 0, 0;
-    --ion-color-warning-shade: #e0b500;
-    --ion-color-warning-tint: #ffd31a;
-  
-    --ion-color-danger: #f04141;
-    --ion-color-danger-rgb: 240, 65, 65;
-    --ion-color-danger-contrast: #ffffff;
-    --ion-color-danger-contrast-rgb: 255, 255, 255;
-    --ion-color-danger-shade: #d33939;
-    --ion-color-danger-tint: #f25454;
-  
-    /* Cores Neutras */
-    --ion-color-light: #f4f5f8;
-    --ion-color-light-rgb: 244, 245, 248;
-    --ion-color-light-contrast: #000000;
-    --ion-color-light-contrast-rgb: 0, 0, 0;
-    --ion-color-light-shade: #d7d8da;
-    --ion-color-light-tint: #f5f6f9;
-  
-    --ion-color-medium: #92949c;
-    --ion-color-medium-rgb: 146, 148, 156;
-    --ion-color-medium-contrast: #ffffff;
-    --ion-color-medium-contrast-rgb: 255, 255, 255;
-    --ion-color-medium-shade: #808289;
-    --ion-color-medium-tint: #9d9fa6;
-  
-    --ion-color-dark: #222428;
-    --ion-color-dark-rgb: 34, 36, 40;
-    --ion-color-dark-contrast: #ffffff;
-    --ion-color-dark-contrast-rgb: 255, 255, 255;
-    --ion-color-dark-shade: #1e2023;
-    --ion-color-dark-tint: #383a3e;
-  
-    /* Gradientes */
-    --gradient-primary: linear-gradient(135deg, #667eea 0%, #11217f 100%);
-    --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-    
-    /* Sombras */
-    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
-    --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.2);
-    --shadow-glow: 0 0 20px rgba(56, 128, 255, 0.3);
-  }
-  
-  /* ============================================
-     PÁGINA DE LOGIN - ESTILO MODERNO
-     ============================================ */
+:root {
+  /* ── Primária ── */
+  --primary: #4e73df;
+  --primary-dark: #2e59d9;
+  --primary-darker: #224abe;
+  --primary-light: #eaeffc;
+  --primary-border: #c5d3f5;
 
-     /* Garantir que o scroll funcione em todo o sistema */
-html, body {
+  /* Ionic aliases */
+  --ion-color-primary: #4e73df;
+  --ion-color-primary-rgb: 78, 115, 223;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #2e59d9;
+  --ion-color-primary-tint: #6b8fe4;
+
+  /* ── Sidebar ── */
+  --sidebar-bg: #4e73df;
+  --sidebar-header-bg: #3a5fd9;
+  --sidebar-text: rgba(255, 255, 255, 0.85);
+  --sidebar-text-muted: rgba(255, 255, 255, 0.55);
+  --sidebar-hover: rgba(255, 255, 255, 0.10);
+  --sidebar-active: rgba(255, 255, 255, 0.18);
+  --sidebar-active-border: #ffffff;
+
+  /* ── Fundos ── */
+  --bg-page: #f8f9fc;
+  --bg-card: #ffffff;
+  --bg-subtle: #f0f3fd;
+
+  /* ── Texto ── */
+  --text-dark: #2d3748;
+  --text-medium: #5a5c69;
+  --text-muted: #858796;
+  --text-light: #a0aec0;
+
+  /* ── Bordas ── */
+  --border: #e3e6f0;
+  --border-input: #d1d3e2;
+
+  /* ── Status ── */
+  --success: #1cc88a;
+  --success-dark: #17a673;
+  --danger: #e74a3b;
+  --danger-dark: #d52a1a;
+  --warning: #f6c23e;
+  --info: #36b9cc;
+
+  /* Ionic status aliases */
+  --ion-color-success: #1cc88a;
+  --ion-color-danger: #e74a3b;
+  --ion-color-warning: #f6c23e;
+  --ion-color-secondary: #858796;
+  --ion-color-light: #f4f5f8;
+  --ion-color-medium: #92949c;
+  --ion-color-dark: #2d3748;
+
+  /* ── Sombras ── */
+  --shadow-card: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  --shadow-sm: 0 2px 8px rgba(78, 115, 223, 0.08);
+  --shadow-glow: 0 0 0 3px rgba(78, 115, 223, 0.15);
+
+  /* ── Gradientes ── */
+  --gradient-primary: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+  --gradient-page: linear-gradient(160deg, #f0f3fd 0%, #f8f9fc 100%);
+}
+
+/* ── Reset global ── */
+html,
+body {
   height: 100%;
   overflow: auto !important;
   position: relative;
 }
 
-/* Remover qualquer limitação de overflow que possa estar causando problemas */
 ion-content {
   --overflow: auto !important;
 }
 
-ion-app, ion-router-outlet, ion-content {
+ion-app,
+ion-router-outlet,
+ion-content,
+ion-page {
   height: auto !important;
+  contain: none !important;
 }

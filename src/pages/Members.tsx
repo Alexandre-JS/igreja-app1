@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { supabase } from '../services/supabase';
 import { Member } from '../types/member';
 import { showFeedback, confirmAction } from '../services/feedback';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Pie, Bar } from 'react-chartjs-2';
+import { exportToPDF, exportToExcel } from '../services/export';
 import './Members.css';
 
 // Registrando os componentes do Chart.js
@@ -130,7 +131,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, onFilterChange, filters
                     <option value="ESTE">ESTE</option>
                     <option value="OESTE">OESTE</option>
                     <option value="SUL">SUL</option>
-                    <option value="SUDOESTE">SUDOESTE</option>
+                    <option value="SUDUESTE">SUDUESTE</option>
                     <option value="NORTE">NORTE</option>
                 </select>
                 
@@ -358,8 +359,9 @@ const Pagination: React.FC<PaginationProps> = ({
 };
 
 const Members: React.FC = () => {
-    const [members, setMembers] = useState<Member[]>([]);
-    const [filteredMembers, setFilteredMembers] = useState<Member[]>([]);
+    const [pageMembers, setPageMembers] = useState<Member[]>([]);
+    const [allFilteredMembers, setAllFilteredMembers] = useState<Member[]>([]);
+    const [totalCount, setTotalCount] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [rowsPerPage, setRowsPerPage] = useState<number>(10);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -368,84 +370,69 @@ const Members: React.FC = () => {
         regiao: '',
         genero: '',
     });
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const history = useHistory();
 
-    // Calculate paginated data
-    const indexOfLastMember = currentPage * rowsPerPage;
-    const indexOfFirstMember = indexOfLastMember - rowsPerPage;
-    const currentMembers = filteredMembers.slice(indexOfFirstMember, indexOfLastMember);
-    const totalPages = Math.ceil(filteredMembers.length / rowsPerPage);
+    const totalPages = Math.ceil(totalCount / rowsPerPage);
 
-    useEffect(() => {
-        fetchMembers();
-    }, []);
+    const applyFilters = (query: any, f: FiltersState) => {
+        if (f.search) query = query.ilike('nome_completo', `%${f.search}%`);
+        if (f.regiao)  query = query.eq('regiao', f.regiao);
+        if (f.genero)  query = query.eq('genero', f.genero);
+        return query;
+    };
 
-    useEffect(() => {
-        // Aplicar filtros quando os members ou filtros mudarem
-        const filtered = members.filter(member => {
-            const matchesSearch = member.nome_completo.toLowerCase().includes(filters.search.toLowerCase());
-            const matchesRegiao = !filters.regiao || member.regiao === filters.regiao;
-            const matchesGenero = !filters.genero || member.genero === filters.genero;
-            
-            return matchesSearch && matchesRegiao && matchesGenero;
-        });
-        
-        setFilteredMembers(filtered);
-        // Reset to first page when filters change
-        setCurrentPage(1);
-    }, [members, filters]);
-
-    const fetchMembers = async () => {
+    const loadMembers = async (page: number, rows: number, f: FiltersState) => {
         try {
             setIsLoading(true);
-            const { data, error } = await supabase
-                .from('members')
-                .select('*')
-                .order('nome_completo');
 
-            if (error) throw error;
+            const from = (page - 1) * rows;
+            const to = from + rows - 1;
 
-            setMembers(data || []);
-            showFeedback('Lista de membros atualizada', 'success');
+            const [pageResult, allResult] = await Promise.all([
+                applyFilters(
+                    supabase.from('members').select('*').order('nome_completo').range(from, to),
+                    f
+                ),
+                applyFilters(
+                    supabase.from('members').select('*', { count: 'exact' }).order('nome_completo'),
+                    f
+                ),
+            ]);
+
+            if (pageResult.error) throw pageResult.error;
+            if (allResult.error) throw allResult.error;
+
+            setPageMembers(pageResult.data || []);
+            setAllFilteredMembers(allResult.data || []);
+            setTotalCount(allResult.count || 0);
         } catch (error) {
-            console.error('Error fetching members:', error);
             showFeedback('Erro ao carregar membros', 'error');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleView = (member: Member) => {
-        history.push(`/app/view/${member.id}`);
-    };
-
-    const handleEdit = (member: Member) => {
-        history.push(`/app/edit/${member.id}`);
-    };
+    useEffect(() => {
+        loadMembers(1, rowsPerPage, filters);
+    }, []);
 
     const handleDelete = async (id: string) => {
+        const confirmed = await confirmAction(
+            'Confirmar exclusão',
+            'Tem certeza que deseja excluir este membro? Esta ação não pode ser desfeita.',
+            'Excluir',
+            'Cancelar'
+        );
+        if (!confirmed) return;
+
         try {
-            const confirmed = await confirmAction(
-                'Confirmar exclusão',
-                'Tem certeza que deseja excluir este membro? Esta ação não pode ser desfeita.',
-                'Excluir',
-                'Cancelar'
-            );
-            
-            if (!confirmed) return;
-            
             setIsLoading(true);
-            const { error } = await supabase
-                .from('members')
-                .delete()
-                .eq('id', id);
-
+            const { error } = await supabase.from('members').delete().eq('id', id);
             if (error) throw error;
-
-            setMembers(members.filter(m => m.id !== id));
+            await loadMembers(currentPage, rowsPerPage, filters);
             showFeedback('Membro removido com sucesso', 'success');
         } catch (error) {
-            console.error('Error deleting member:', error);
             showFeedback('Erro ao remover membro', 'error');
         } finally {
             setIsLoading(false);
@@ -453,20 +440,38 @@ const Members: React.FC = () => {
     };
 
     const handleSearch = (value: string) => {
-        setFilters({...filters, search: value});
+        const newFilters = { ...filters, search: value };
+        setFilters(newFilters);
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+            setCurrentPage(1);
+            loadMembers(1, rowsPerPage, newFilters);
+        }, 350);
     };
 
     const handleFilterChange = (filterName: string, value: string) => {
-        setFilters({...filters, [filterName]: value});
+        const newFilters = { ...filters, [filterName]: value };
+        setFilters(newFilters);
+        setCurrentPage(1);
+        loadMembers(1, rowsPerPage, newFilters);
     };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
+        loadMembers(page, rowsPerPage, filters);
     };
 
     const handleRowsPerPageChange = (rows: number) => {
         setRowsPerPage(rows);
-        setCurrentPage(1); // Reset to first page when changing rows per page
+        setCurrentPage(1);
+        loadMembers(1, rows, filters);
+    };
+
+    const clearFilters = () => {
+        const cleared = { search: '', regiao: '', genero: '' };
+        setFilters(cleared);
+        setCurrentPage(1);
+        loadMembers(1, rowsPerPage, cleared);
     };
 
     return (
@@ -477,64 +482,65 @@ const Members: React.FC = () => {
                     <p>Carregando membros...</p>
                 </div>
             )}
-            
+
             <header className="page-header">
                 <h1>Ekklesia - Gestão de Membros</h1>
                 <div className="header-actions">
-                    <button 
-                        onClick={() => history.push('/app/add')} 
-                        className="add-btn"
-                    >
+                    <button onClick={() => history.push('/app/add')} className="add-btn">
                         + Novo
                     </button>
-                    <button className="export-btn">
-                        Exportar Lista
+                    <button
+                        className="export-btn"
+                        onClick={() => exportToPDF(allFilteredMembers)}
+                        title="Exportar para PDF"
+                    >
+                        PDF
+                    </button>
+                    <button
+                        className="export-btn export-btn--excel"
+                        onClick={() => exportToExcel(allFilteredMembers)}
+                        title="Exportar para Excel"
+                    >
+                        Excel
                     </button>
                 </div>
             </header>
-            
-            {/* Filters moved to top */}
+
             <div className="filters-section">
-                <FilterBar 
-                    onSearch={handleSearch} 
+                <FilterBar
+                    onSearch={handleSearch}
                     onFilterChange={handleFilterChange}
                     filters={filters}
                 />
-                
                 <div className="results-count">
-                    {filteredMembers.length} {filteredMembers.length === 1 ? 'membro encontrado' : 'membros encontrados'}
+                    {totalCount} {totalCount === 1 ? 'membro encontrado' : 'membros encontrados'}
                 </div>
             </div>
 
             <main className="members-content">
-                {/* Gráficos e estatísticas */}
-                <Charts members={filteredMembers} />
-                
-                {/* Tabela de membros */}
-                {filteredMembers.length > 0 ? (
-                    <MemberTable 
-                        members={currentMembers}
-                        onView={handleView} // Changed to handleView
-                        onEdit={handleEdit} // Added handleEdit prop
+                <Charts members={allFilteredMembers} />
+
+                {totalCount > 0 ? (
+                    <MemberTable
+                        members={pageMembers}
+                        onView={(m) => history.push(`/app/view/${m.id}`)}
+                        onEdit={(m) => history.push(`/app/edit/${m.id}`)}
                         onDelete={handleDelete}
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={handlePageChange}
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleRowsPerPageChange}
-                        totalMembers={filteredMembers.length}
+                        totalMembers={totalCount}
                     />
                 ) : (
                     <div className="empty-state">
                         <p>Nenhum membro encontrado com os filtros atuais.</p>
-                        {filters.search || filters.regiao || filters.genero ? (
-                            <button 
-                                className="clear-filters-btn"
-                                onClick={() => setFilters({search: '', regiao: '', genero: ''})}
-                            >
+                        {(filters.search || filters.regiao || filters.genero) && (
+                            <button className="clear-filters-btn" onClick={clearFilters}>
                                 Limpar filtros
                             </button>
-                        ) : null}
+                        )}
                     </div>
                 )}
             </main>

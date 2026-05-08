@@ -9,25 +9,25 @@ export default {
       colors: {
         // Cores customizadas para o tema da igreja
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+          50: '#f8f9fc',
+          100: '#eef2f9',
+          200: '#d1d9f1',
+          300: '#abb9e8',
+          400: '#8499de',
+          500: '#4e73df',
+          600: '#3256bd',
+          700: '#26418f',
+          800: '#1a2c61',
+          900: '#0d1630',
         },
         church: {
           gold: '#D4A574',
-          darkblue: '#1a365d',
-          lightblue: '#63b3ed',
-          primary: '#2563eb',
-          'primary-dark': '#1d4ed8',
-          secondary: '#1a365d',
-          bg: '#f8fafc',
+          darkblue: '#224abe',
+          lightblue: '#4e73df',
+          primary: '#4e73df',
+          'primary-dark': '#224abe',
+          secondary: '#858796',
+          bg: '#ffffff',
         }
       },
       fontFamily: {
@@ -41,29 +41,29 @@ export default {
       },
       keyframes: {
         float: {
-          '0%, 100%': { 
+          '0%, 100%': {
             transform: 'translateY(0px) rotate(0deg)',
             opacity: '0.5'
           },
-          '50%': { 
+          '50%': {
             transform: 'translateY(-20px) rotate(180deg)',
             opacity: '0.8'
           }
         },
         glow: {
-          '0%': { 
-            boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' 
+          '0%': {
+            boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)'
           },
-          '100%': { 
-            boxShadow: '0 0 30px rgba(147, 51, 234, 0.8)' 
+          '100%': {
+            boxShadow: '0 0 30px rgba(147, 51, 234, 0.8)'
           }
         },
         shimmer: {
-          '0%': { 
-            backgroundPosition: '-200% 0' 
+          '0%': {
+            backgroundPosition: '-200% 0'
           },
-          '100%': { 
-            backgroundPosition: '200% 0' 
+          '100%': {
+            backgroundPosition: '200% 0'
           }
         },
         gradient: {
@@ -90,9 +90,9 @@ export default {
   },
   plugins: [
     // ...existing code...
-    
+
     // Plugin para corrigir a altura da tela em dispositivos móveis
-    function({ addBase }) {
+    function ({ addBase }) {
       addBase({
         ':root': {
           '--vh': '1vh',

@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { IonIcon } from '@ionic/react';
+import {
+  mailOutline,
+  lockClosedOutline,
+  eyeOutline,
+  eyeOffOutline,
+  businessOutline,
+} from 'ionicons/icons';
 import { supabase } from '../services/supabase';
 import { showFeedback } from '../services/feedback';
 import './Login.css';
@@ -12,63 +20,50 @@ const Login: React.FC = () => {
   const [fadeIn, setFadeIn] = useState(false);
   const history = useHistory();
 
-  // Efeito de animação
   useEffect(() => {
-    setTimeout(() => setFadeIn(true), 100);
+    const t = setTimeout(() => setFadeIn(true), 60);
+    return () => clearTimeout(t);
   }, []);
 
-  // Verificar sessão existente
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        history.push('/app');
-      }
+      if (session) history.push('/app');
     };
-    
     checkSession();
-    
-    // Escutar mudanças de autenticação
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === 'SIGNED_IN' && session) {
-          history.push('/app');
-        }
-      }
-    );
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) history.push('/app');
+    });
 
     return () => subscription.unsubscribe();
   }, [history]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim() || !password) {
       showFeedback('Por favor, preencha todos os campos', 'warning');
       return;
     }
-    
-    setIsLoading(true);
 
+    setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
-        password
+        password,
       });
 
       if (error) {
-        let errorMessage = 'Erro ao fazer login';
-        
-        if (error.message === 'Invalid login credentials') {
-          errorMessage = 'Email ou senha incorretos';
-        }
-        
-        showFeedback(errorMessage, 'error');
+        const msg = error.message === 'Invalid login credentials'
+          ? 'Email ou senha incorretos'
+          : 'Erro ao fazer login';
+        showFeedback(msg, 'error');
       } else if (data?.user) {
         showFeedback('Login realizado com sucesso!', 'success');
         history.push('/app');
       }
-    } catch (error) {
+    } catch {
       showFeedback('Ocorreu um erro inesperado. Tente novamente.', 'error');
     } finally {
       setIsLoading(false);
@@ -77,58 +72,65 @@ const Login: React.FC = () => {
 
   return (
     <div className={`login-container ${fadeIn ? 'fade-in' : ''}`}>
+      {/* Bolhas de fundo decorativas */}
+      <div className="login-orb login-orb-1" />
+      <div className="login-orb login-orb-2" />
+      <div className="login-orb login-orb-3" />
+
       <div className="login-card">
+        {/* Cabeçalho */}
         <div className="login-header">
+          <IonIcon icon={businessOutline} className="login-logo-icon" />
           <h1 className="app-name">Ekklesia</h1>
-          <p className="app-description">Gestão de Membros da Igreja</p>
+          <p className="app-description">Gestão de Membros · ICUM / SNF</p>
         </div>
-        
+
+        <div className="login-divider" />
+
+        {/* Formulário */}
         <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
+          {/* Email */}
+          <div className="input-wrapper">
+            <IonIcon icon={mailOutline} className="input-icon" />
             <input
               type="email"
-              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Seu email"
+              placeholder="Email"
+              autoComplete="email"
               disabled={isLoading}
             />
           </div>
-          
-          <div className="form-group password-group">
-            <label htmlFor="password">Senha</label>
-            <div className="password-input-container">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Sua senha"
-                disabled={isLoading}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="toggle-password"
-                tabIndex={-1}
-              >
-                {showPassword ? 'Ocultar' : 'Mostrar'}
-              </button>
-            </div>
+
+          {/* Senha */}
+          <div className="input-wrapper">
+            <IonIcon icon={lockClosedOutline} className="input-icon" />
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Senha"
+              autoComplete="current-password"
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowPassword(!showPassword)}
+              tabIndex={-1}
+            >
+              <IonIcon icon={showPassword ? eyeOffOutline : eyeOutline} />
+            </button>
           </div>
-          
-          <button 
-            type="submit" 
-            className="login-button"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Entrando...' : 'Entrar'}
+
+          <button type="submit" className="login-button" disabled={isLoading}>
+            {isLoading ? 'A entrar...' : 'Entrar'}
           </button>
         </form>
-        
+
+        {/* Rodapé */}
         <div className="login-footer">
-          <p>&copy; 2024 Ekklesia - Todos os direitos reservados</p>
+          <p>&copy; 2024 Ekklesia — Todos os direitos reservados</p>
           <p className="version">v1.0.0</p>
         </div>
       </div>
