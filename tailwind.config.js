@@ -41,29 +41,29 @@ export default {
       },
       keyframes: {
         float: {
-          '0%, 100%': { 
+          '0%, 100%': {
             transform: 'translateY(0px) rotate(0deg)',
             opacity: '0.5'
           },
-          '50%': { 
+          '50%': {
             transform: 'translateY(-20px) rotate(180deg)',
             opacity: '0.8'
           }
         },
         glow: {
-          '0%': { 
-            boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' 
+          '0%': {
+            boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)'
           },
-          '100%': { 
-            boxShadow: '0 0 30px rgba(147, 51, 234, 0.8)' 
+          '100%': {
+            boxShadow: '0 0 30px rgba(147, 51, 234, 0.8)'
           }
         },
         shimmer: {
-          '0%': { 
-            backgroundPosition: '-200% 0' 
+          '0%': {
+            backgroundPosition: '-200% 0'
           },
-          '100%': { 
-            backgroundPosition: '200% 0' 
+          '100%': {
+            backgroundPosition: '200% 0'
           }
         },
         gradient: {
@@ -90,9 +90,9 @@ export default {
   },
   plugins: [
     // ...existing code...
-    
+
     // Plugin para corrigir a altura da tela em dispositivos móveis
-    function({ addBase }) {
+    function ({ addBase }) {
       addBase({
         ':root': {
           '--vh': '1vh',

@@ -5,73 +5,74 @@
 
 :root {
   /* ── Primária ── */
-  --primary:          #4e73df;
-  --primary-dark:     #2e59d9;
-  --primary-darker:   #224abe;
-  --primary-light:    #eaeffc;
-  --primary-border:   #c5d3f5;
+  --primary: #4e73df;
+  --primary-dark: #2e59d9;
+  --primary-darker: #224abe;
+  --primary-light: #eaeffc;
+  --primary-border: #c5d3f5;
 
   /* Ionic aliases */
-  --ion-color-primary:              #4e73df;
-  --ion-color-primary-rgb:          78, 115, 223;
-  --ion-color-primary-contrast:     #ffffff;
+  --ion-color-primary: #4e73df;
+  --ion-color-primary-rgb: 78, 115, 223;
+  --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade:        #2e59d9;
-  --ion-color-primary-tint:         #6b8fe4;
+  --ion-color-primary-shade: #2e59d9;
+  --ion-color-primary-tint: #6b8fe4;
 
   /* ── Sidebar ── */
-  --sidebar-bg:           #4e73df;
-  --sidebar-header-bg:    #3a5fd9;
-  --sidebar-text:         rgba(255, 255, 255, 0.85);
-  --sidebar-text-muted:   rgba(255, 255, 255, 0.55);
-  --sidebar-hover:        rgba(255, 255, 255, 0.10);
-  --sidebar-active:       rgba(255, 255, 255, 0.18);
-  --sidebar-active-border:#ffffff;
+  --sidebar-bg: #4e73df;
+  --sidebar-header-bg: #3a5fd9;
+  --sidebar-text: rgba(255, 255, 255, 0.85);
+  --sidebar-text-muted: rgba(255, 255, 255, 0.55);
+  --sidebar-hover: rgba(255, 255, 255, 0.10);
+  --sidebar-active: rgba(255, 255, 255, 0.18);
+  --sidebar-active-border: #ffffff;
 
   /* ── Fundos ── */
-  --bg-page:   #f8f9fc;
-  --bg-card:   #ffffff;
+  --bg-page: #f8f9fc;
+  --bg-card: #ffffff;
   --bg-subtle: #f0f3fd;
 
   /* ── Texto ── */
-  --text-dark:   #2d3748;
+  --text-dark: #2d3748;
   --text-medium: #5a5c69;
-  --text-muted:  #858796;
-  --text-light:  #a0aec0;
+  --text-muted: #858796;
+  --text-light: #a0aec0;
 
   /* ── Bordas ── */
-  --border:        #e3e6f0;
-  --border-input:  #d1d3e2;
+  --border: #e3e6f0;
+  --border-input: #d1d3e2;
 
   /* ── Status ── */
-  --success:       #1cc88a;
-  --success-dark:  #17a673;
-  --danger:        #e74a3b;
-  --danger-dark:   #d52a1a;
-  --warning:       #f6c23e;
-  --info:          #36b9cc;
+  --success: #1cc88a;
+  --success-dark: #17a673;
+  --danger: #e74a3b;
+  --danger-dark: #d52a1a;
+  --warning: #f6c23e;
+  --info: #36b9cc;
 
   /* Ionic status aliases */
-  --ion-color-success:       #1cc88a;
-  --ion-color-danger:        #e74a3b;
-  --ion-color-warning:       #f6c23e;
-  --ion-color-secondary:     #858796;
-  --ion-color-light:         #f4f5f8;
-  --ion-color-medium:        #92949c;
-  --ion-color-dark:          #2d3748;
+  --ion-color-success: #1cc88a;
+  --ion-color-danger: #e74a3b;
+  --ion-color-warning: #f6c23e;
+  --ion-color-secondary: #858796;
+  --ion-color-light: #f4f5f8;
+  --ion-color-medium: #92949c;
+  --ion-color-dark: #2d3748;
 
   /* ── Sombras ── */
-  --shadow-card:  0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-  --shadow-sm:    0 2px 8px rgba(78, 115, 223, 0.08);
-  --shadow-glow:  0 0 0 3px rgba(78, 115, 223, 0.15);
+  --shadow-card: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  --shadow-sm: 0 2px 8px rgba(78, 115, 223, 0.08);
+  --shadow-glow: 0 0 0 3px rgba(78, 115, 223, 0.15);
 
   /* ── Gradientes ── */
   --gradient-primary: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
-  --gradient-page:    linear-gradient(160deg, #f0f3fd 0%, #f8f9fc 100%);
+  --gradient-page: linear-gradient(160deg, #f0f3fd 0%, #f8f9fc 100%);
 }
 
 /* ── Reset global ── */
-html, body {
+html,
+body {
   height: 100%;
   overflow: auto !important;
   position: relative;
@@ -81,7 +82,10 @@ ion-content {
   --overflow: auto !important;
 }
 
-ion-app, ion-router-outlet, ion-content, ion-page {
+ion-app,
+ion-router-outlet,
+ion-content,
+ion-page {
   height: auto !important;
   contain: none !important;
 }
