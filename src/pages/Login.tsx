@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { IonIcon } from '@ionic/react';
 import {
   mailOutline,
@@ -82,7 +82,8 @@ const Login: React.FC = () => {
         <div className="login-header">
           <IonIcon icon={businessOutline} className="login-logo-icon" />
           <h1 className="app-name">Ekklesia</h1>
-          <p className="app-description">Gestão de Membros · ICUM / SNF</p>
+          <p className="app-description">Sistema de Gestão de Membros</p>
+          <span className="church-tag">ICUM / SNF</span>
         </div>
 
         <div className="login-divider" />
@@ -124,14 +125,18 @@ const Login: React.FC = () => {
           </div>
 
           <button type="submit" className="login-button" disabled={isLoading}>
-            {isLoading ? 'A entrar...' : 'Entrar'}
+            {isLoading ? 'Autenticando...' : 'Aceder ao Sistema'}
           </button>
+
         </form>
 
         {/* Rodapé */}
         <div className="login-footer">
-          <p>&copy; 2024 Ekklesia — Todos os direitos reservados</p>
-          <p className="version">v1.0.0</p>
+          <p className="login-register-link">
+            Membro da ICUM/SNF? <Link to="/register">Registe-se aqui</Link>
+          </p>
+          <p>&copy; 2026 Ekklesia — Gestão Eclesiástica Inteligente</p>
+          <p className="version">Versão 1.0.0</p>
         </div>
       </div>
     </div>

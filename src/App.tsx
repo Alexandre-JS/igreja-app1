@@ -15,6 +15,7 @@ import { canManageMembers, canManageUsers } from './utils/permissions';
 import { setupViewportHeight, fixIonicScroll } from './utils/viewport';
 import ViewMember from './pages/ViewMember';
 import About from './pages/About';
+import PublicRegister from './pages/PublicRegister';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -116,6 +117,10 @@ const App: React.FC = () => {
         <Switch>
           <Route path="/login" exact>
             {isAuthenticated ? <Redirect to="/app/home" /> : <Login />}
+          </Route>
+
+          <Route path="/register" exact>
+            {isAuthenticated ? <Redirect to="/app/home" /> : <PublicRegister />}
           </Route>
           
           <Route path="/app">

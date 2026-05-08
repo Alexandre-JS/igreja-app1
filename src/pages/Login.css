@@ -56,8 +56,15 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50%       { transform: translateY(-18px) scale(1.04); }
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-18px) scale(1.04);
+  }
 }
 
 /* ── Card branco ── */
@@ -76,8 +83,15 @@
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Cabeçalho ── */
@@ -98,7 +112,18 @@
   font-size: 1.85rem;
   font-weight: 700;
   color: #2d3748;
-  letter-spacing: 0.02em;
+}
+
+.church-tag {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.8rem;
+  background: #f0f4ff;
+  color: #4e73df;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
 }
 
 .app-description {
@@ -217,6 +242,23 @@
   cursor: not-allowed;
 }
 
+/* ── Link de cadastro no rodapé do login ── */
+.login-register-link {
+  margin-bottom: 0.5rem;
+  font-size: 0.83rem;
+  color: #858796;
+}
+
+.login-register-link a {
+  color: #4e73df;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-register-link a:hover {
+  text-decoration: underline;
+}
+
 /* ── Rodapé ── */
 .login-footer {
   padding: 1rem 2rem 1.25rem;
@@ -230,6 +272,96 @@
   font-size: 0.70rem;
   margin-top: 0.15rem;
   opacity: 0.7;
+}
+
+/* ── Select dentro de input-wrapper ── */
+.input-wrapper .select-field {
+  flex: 1;
+  padding: 0.875rem 0.5rem 0.875rem 0;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  color: #2d3748;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.input-wrapper .select-field.select-placeholder {
+  color: #a0aec0;
+}
+
+.input-wrapper .select-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Card do cadastro (scrollável) ── */
+.register-card {
+  overflow-y: auto;
+  max-height: 92vh;
+}
+
+/* ── Link login/cadastro ── */
+.register-login-link {
+  text-align: center;
+  margin-top: 0.15rem;
+  font-size: 0.85rem;
+  color: #858796;
+}
+
+.register-login-link a {
+  color: #4e73df;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-login-link a:hover {
+  text-decoration: underline;
+}
+
+/* ── Ecrã de sucesso do cadastro ── */
+.register-success {
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.register-success-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #4e73df, #224abe);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.register-success h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.register-success p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #858796;
+  line-height: 1.5;
+}
+
+.register-success .login-button {
+  margin-top: 0.5rem;
+  width: auto;
+  padding: 0.7rem 2rem;
 }
 
 /* ── Mobile ── */

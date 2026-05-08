@@ -1,0 +1,456 @@
+/* ── Página base ── */
+.register-page {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(145deg, #4e73df 0%, #2e59d9 55%, #224abe 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Barra de progresso ── */
+.register-progress {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+}
+
+.register-progress-fill {
+  height: 100%;
+  background: #fff;
+  transition: width 0.45s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── Cabeçalho ── */
+.register-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.5rem;
+  flex-shrink: 0;
+}
+
+.register-logo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.03em;
+}
+
+.register-header-link {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.register-header-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+/* ── Área de conteúdo ── */
+.register-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem 1.75rem 0.5rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Passo (animação de entrada) ── */
+.register-step {
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+  animation: stepForward 0.35s ease both;
+}
+
+.register-step.back-in {
+  animation: stepBack 0.35s ease both;
+}
+
+@keyframes stepForward {
+  from { opacity: 0; transform: translateX(48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes stepBack {
+  from { opacity: 0; transform: translateX(-48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Número da pergunta ── */
+.step-number {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+/* ── Pergunta ── */
+.step-question {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+}
+
+.optional-badge {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 0.5rem;
+}
+
+/* ── Texto explicativo ── */
+.step-hint {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.55;
+  margin: 0 0 1.75rem;
+}
+
+/* ── Input de texto/data ── */
+.step-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+  padding: 0.65rem 0;
+  font-size: 1.3rem;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  caret-color: #fff;
+}
+
+.step-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.step-input:focus {
+  border-bottom-color: #fff;
+}
+
+.step-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+/* ── Botões de escolha ── */
+.choice-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.choice-grid.two-col {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.choice-grid.two-col .choice-btn {
+  flex: 1;
+  min-width: 120px;
+}
+
+.choice-scroll {
+  max-height: 46vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 2px;
+}
+
+.choice-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  width: 100%;
+  min-height: 52px;
+}
+
+.choice-btn:active {
+  transform: scale(0.98);
+}
+
+.choice-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.choice-btn.selected {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: #fff;
+}
+
+.choice-letter {
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
+
+.choice-btn.selected .choice-letter {
+  background: #fff;
+  color: #4e73df;
+}
+
+/* ── Barra de navegação inferior ── */
+.register-nav {
+  flex-shrink: 0;
+  padding: 1rem 1.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 540px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.nav-back-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
+}
+
+.nav-back-btn:hover {
+  color: #fff;
+}
+
+.nav-next-btn {
+  background: #fff;
+  color: #4e73df;
+  border: none;
+  border-radius: 50px;
+  padding: 0.85rem 1.9rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+  letter-spacing: 0.01em;
+}
+
+.nav-next-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 26px rgba(0, 0, 0, 0.24);
+}
+
+.nav-next-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.nav-next-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Ecrã de boas-vindas ── */
+.welcome-icon-box {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.welcome-title {
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+  margin: 0 0 0.9rem;
+}
+
+.welcome-text {
+  font-size: 0.97rem;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.65;
+  margin: 0 0 0.6rem;
+}
+
+.welcome-steps {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.welcome-step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.welcome-step-dot {
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ── Resumo de confirmação ── */
+.confirm-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 46vh;
+  overflow-y: auto;
+}
+
+.confirm-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.confirm-label {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.confirm-value {
+  font-size: 0.95rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* ── Ecrã de sucesso ── */
+.success-check {
+  width: 68px;
+  height: 68px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 2.5px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.success-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.75rem;
+}
+
+.success-text {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.65;
+  margin: 0 0 0.5rem;
+}
+
+/* ── Link no Login ── */
+.login-register-link {
+  display: block;
+  text-align: center;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e3e6f0;
+  font-size: 0.83rem;
+  color: #858796;
+}
+
+.login-register-link a {
+  color: #4e73df;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-register-link a:hover {
+  text-decoration: underline;
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .register-content {
+    padding: 1.25rem 1.25rem 0.5rem;
+  }
+
+  .register-nav {
+    padding: 0.75rem 1.25rem 1.25rem;
+  }
+
+  .step-question {
+    font-size: 1.45rem;
+  }
+
+  .choice-scroll {
+    max-height: 42vh;
+  }
+}
