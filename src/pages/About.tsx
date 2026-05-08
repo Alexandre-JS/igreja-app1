@@ -76,7 +76,7 @@ const About: React.FC = () => {
           </div>
 
           <div className="about-footer">
-            <p>&copy; 2024 Ekklesia - Todos os direitos reservados</p>
+            <p>&copy; 2026 Ekklesia - Todos os direitos reservados</p>
           </div>
         </div>
       </main>
@@ -85,4 +85,3 @@ const About: React.FC = () => {
 };
 
 export default About;
-                                  

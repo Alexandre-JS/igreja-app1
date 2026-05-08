@@ -39,7 +39,7 @@ const AboutModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
         <li><span>Contacto</span><span>alexandre@equipmoz.org</span></li>
       </ul>
       <div className="about-divider" />
-      <p className="about-copy">&copy; 2024 Ekklesia — Todos os direitos reservados</p>
+      <p className="about-copy">&copy; 2026 Ekklesia — Todos os direitos reservados</p>
     </div>
   </div>
 );
