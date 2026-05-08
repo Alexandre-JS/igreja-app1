@@ -13,27 +13,10 @@ const Spinner = ({ message }: { message: string }) => (
   </div>
 );
 
-// Componente de card estatístico simplificado
-const StatCard = ({ title, value, subtitle, icon, className }: { 
-  title: string;
-  value: number | string;
-  subtitle: string;
-  icon: React.ReactNode;
-  className?: string;
-}) => (
-  <div className={`stat-card ${className || ''}`}>
-    <div className="stat-icon">{icon}</div>
-    <div className="stat-content">
-      <h3>{title}</h3>
-      <h2>{value}</h2>
-      <p>{subtitle}</p>
-    </div>
-  </div>
-);
 
 // Cores para o gráfico de regiões
 const regionColors = [
-  '#3880ff', // Azul
+  '#4e73df', // Azul
   '#3ec170', // Verde
   '#ff9a2f', // Laranja
   '#f53d3d', // Vermelho
@@ -318,11 +301,6 @@ const Home: React.FC = () => {
     .sort(([, a], [, b]) => b - a)
     .slice(0, 3);
     
-  // Obter as principais funções
-  const topFuncoes = Object.entries(stats.funcoes)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 3);
-  
   // Função para alternar período de tempo
   const handleTimeFrameChange = (frame: 'week'|'month'|'year') => {
     setTimeFrame(frame);
@@ -451,7 +429,7 @@ const Home: React.FC = () => {
                   style={{
                     background: stats.total > 0 
                       ? `conic-gradient(
-                          #3880ff 0% ${malePercent}%, 
+                          #4e73df 0% ${malePercent}%,
                           #ff6b9a ${malePercent}% 100%
                         )`
                       : '#f0f0f0'
@@ -462,7 +440,7 @@ const Home: React.FC = () => {
                 
                 <div className="chart-legend">
                   <div className="legend-item">
-                    <span className="legend-color" style={{backgroundColor: '#3880ff'}}></span>
+                    <span className="legend-color" style={{backgroundColor: '#4e73df'}}></span>
                     <span className="legend-label">Masculino</span>
                     <span className="legend-value">{stats.masculino} ({malePercent}%)</span>
                   </div>

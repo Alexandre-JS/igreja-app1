@@ -77,7 +77,7 @@
 }
 
 .create-button {
-  background-color: #3880ff;
+  background-color: var(--primary);
   color: white;
   border: none;
   padding: 10px;
@@ -89,7 +89,7 @@
 }
 
 .create-button:hover {
-  background-color: #2d6ad9;
+  background-color: var(--primary-dark);
 }
 
 /* Lista de usuários */

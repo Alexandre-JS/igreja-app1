@@ -195,6 +195,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
                             onChange={handleChange}
                             className="form-control"
                         >
+                            <option value="">Não informado</option>
                             <option value="Batizado">Batizado</option>
                             <option value="Confirmado">Confirmado</option>
                         </select>
@@ -209,6 +210,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
                             onChange={handleChange}
                             className="form-control"
                         >
+                            <option value="">Nenhuma</option>
                             <option value="Dominical">Dominical</option>
                             <option value="Jovens">Jovens</option>
                             <option value="SNF">SNF</option>

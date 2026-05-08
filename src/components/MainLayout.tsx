@@ -1,119 +1,144 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { IonIcon } from '@ionic/react';
+import {
+  speedometerOutline,
+  peopleOutline,
+  personAddOutline,
+  shieldCheckmarkOutline,
+  informationCircleOutline,
+  logOutOutline,
+  menuOutline,
+  closeOutline,
+} from 'ionicons/icons';
 import { supabase } from '../services/supabase';
 import './MainLayout.css';
 
 interface MainLayoutProps {
   children: React.ReactNode;
   hasPermission?: boolean;
+  hasUserManagement?: boolean;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children, hasPermission = false }) => {
+const AboutModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
+  <div className="about-overlay" onClick={onClose}>
+    <div className="about-modal" onClick={(e) => e.stopPropagation()}>
+      <button className="about-close" onClick={onClose}>
+        <IonIcon icon={closeOutline} />
+      </button>
+      <div className="about-logo">E</div>
+      <h2 className="about-title">Ekklesia</h2>
+      <p className="about-subtitle">Sistema de Gestão de Membros</p>
+      <div className="about-divider" />
+      <ul className="about-info">
+        <li><span>Organização</span><span>ICUM / SNF</span></li>
+        <li><span>Versão</span><span>1.0.0</span></li>
+        <li><span>Plataforma</span><span>Web / Android</span></li>
+        <li><span>Base de dados</span><span>Supabase (PostgreSQL)</span></li>
+        <li><span>Desenvolvido por</span><span>Alexandre Sitole</span></li>
+        <li><span>Contacto</span><span>alexandre@equipmoz.org</span></li>
+      </ul>
+      <div className="about-divider" />
+      <p className="about-copy">&copy; 2024 Ekklesia — Todos os direitos reservados</p>
+    </div>
+  </div>
+);
+
+const MainLayout: React.FC<MainLayoutProps> = ({ children, hasPermission = false, hasUserManagement = false }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const history = useHistory();
   const location = useLocation();
-  
-  // Função para navegar e fechar o menu em dispositivos móveis
+
   const navigateTo = (path: string) => {
     history.push(path);
-    // Em dispositivos móveis, fechar o menu após navegação
-    if (window.innerWidth <= 768) {
-      setMenuOpen(false);
-    }
+    if (window.innerWidth <= 768) setMenuOpen(false);
   };
-  
-  // Detectar a rota atual para destacar item ativo
+
   const currentPath = location.pathname;
-  
+
   return (
     <div className="app-container">
-      {/* Menu Lateral */}
-      <>
-        <div className={`menu-overlay ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)}></div>
-        <div className={`sidemenu ${menuOpen ? 'open' : ''}`}>
-          <div className="sidemenu-header">
-            <h3 className="sidemenu-title">ICUM/SNF</h3>
-            <button className="close-menu-btn" onClick={() => setMenuOpen(false)}>✕</button>
+      {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
+
+      <div className={`menu-overlay ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)} />
+
+      <div className={`sidemenu ${menuOpen ? 'open' : ''}`}>
+        {/* Logo area */}
+        <div className="sidemenu-logo">
+          <div className="sidemenu-logo-icon">E</div>
+          <div className="sidemenu-logo-text">
+            <span className="sidemenu-app-name">Ekklesia</span>
+            <span className="sidemenu-org">ICUM / SNF</span>
           </div>
-          <div className="sidemenu-content">
-            {/* Item Dashboard */}
-            <div 
-              className={`menu-item ${currentPath.includes('/home') ? 'active' : ''}`}
-              onClick={() => navigateTo('/app/home')}
+          <button className="close-menu-btn" onClick={() => setMenuOpen(false)}>
+            <IonIcon icon={closeOutline} />
+          </button>
+        </div>
+
+        {/* Nav items */}
+        <nav className="sidemenu-nav">
+          <div
+            className={`menu-item ${currentPath.includes('/home') ? 'active' : ''}`}
+            onClick={() => navigateTo('/app/home')}
+          >
+            <IonIcon icon={speedometerOutline} className="menu-icon" />
+            <span className="menu-text">Dashboard</span>
+          </div>
+
+          <div
+            className={`menu-item ${currentPath.includes('/members') ? 'active' : ''}`}
+            onClick={() => navigateTo('/app/members')}
+          >
+            <IonIcon icon={peopleOutline} className="menu-icon" />
+            <span className="menu-text">Membros</span>
+          </div>
+
+          {hasPermission && (
+            <div
+              className={`menu-item ${currentPath.includes('/add') ? 'active' : ''}`}
+              onClick={() => navigateTo('/app/add')}
             >
-              <span className="menu-icon">📊</span>
-              <span className="menu-text">Dashboard</span>
+              <IonIcon icon={personAddOutline} className="menu-icon" />
+              <span className="menu-text">Adicionar Membro</span>
             </div>
-            
-            {/* Lista de Membros */}
-            <div 
-              className={`menu-item ${currentPath.includes('/members') ? 'active' : ''}`}
-              onClick={() => navigateTo('/app/members')}
+          )}
+
+          {hasUserManagement && (
+            <div
+              className={`menu-item ${currentPath.includes('/users') ? 'active' : ''}`}
+              onClick={() => navigateTo('/app/users')}
             >
-              <span className="menu-icon">👥</span>
-              <span className="menu-text">Membros</span>
+              <IonIcon icon={shieldCheckmarkOutline} className="menu-icon" />
+              <span className="menu-text">Gerenciar Usuários</span>
             </div>
-            
-            {/* Adicionar Membro - visível apenas com permissão */}
-            {hasPermission && (
-              <div 
-                className={`menu-item ${currentPath.includes('/add') ? 'active' : ''}`}
-                onClick={() => navigateTo('/app/add')}
-              >
-                <span className="menu-icon">➕</span>
-                <span className="menu-text">Adicionar Membro</span>
-              </div>
-            )}
-            
-            {/* Gerenciamento de Usuários - visível apenas com permissão */}
-            {hasPermission && (
-              <div 
-                className={`menu-item ${currentPath.includes('/users') ? 'active' : ''}`}
-                onClick={() => navigateTo('/app/users')}
-              >
-                <span className="menu-icon">👤</span>
-                <span className="menu-text">Gerenciar Usuários</span>
-              </div>
-            )}
-            
-            {/* Componentes Tailwind - para desenvolvimento */}
-            <div 
-              className={`menu-item ${currentPath.includes('/test-tailwind') ? 'active' : ''}`}
-              onClick={() => navigateTo('/app/test-tailwind')}
-            >
-              <span className="menu-icon">🎨</span>
-              <span className="menu-text">UI Components</span>
-            </div>
-            
-            {/* Separador */}
-            <div className="menu-separator"></div>
-            
-            {/* Logout */}
-            <div 
-              className="menu-item"
-              onClick={async () => {
-                await supabase.auth.signOut();
-                history.push('/login');
-              }}
-            >
-              <span className="menu-icon">🚪</span>
-              <span className="menu-text">Sair</span>
-            </div>
+          )}
+        </nav>
+
+        {/* Fixed bottom section */}
+        <div className="sidemenu-bottom">
+          <div className="menu-separator" />
+          <div className="menu-item" onClick={() => { setShowAbout(true); if (window.innerWidth <= 768) setMenuOpen(false); }}>
+            <IonIcon icon={informationCircleOutline} className="menu-icon" />
+            <span className="menu-text">Sobre o Sistema</span>
+          </div>
+          <div
+            className="menu-item menu-item-logout"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              history.push('/login');
+            }}
+          >
+            <IonIcon icon={logOutOutline} className="menu-icon" />
+            <span className="menu-text">Sair</span>
           </div>
         </div>
-      </>
-      
-      {/* Conteúdo principal */}
+      </div>
+
       <div className={`main-content ${menuOpen ? 'menu-open' : ''}`}>
-        {/* Botão do menu (visível apenas em mobile) */}
-        <button 
-          className="menu-toggle" 
-          onClick={() => setMenuOpen(true)}
-        >
-          ☰
+        <button className="menu-toggle" onClick={() => setMenuOpen(true)}>
+          <IonIcon icon={menuOutline} />
         </button>
-        
-        {/* Conteúdo da página */}
         {children}
       </div>
     </div>
