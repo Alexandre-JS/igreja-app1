@@ -22,12 +22,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
     
     // Initialize form data from initialData once on mount, and when initialData changes
     useEffect(() => {
-        console.log('[MemberForm] initialData recebido:', initialData);
-        setFormData(prevData => {
-            const merged = { ...prevData, ...initialData };
-            console.log('[MemberForm] formData após merge com initialData:', merged);
-            return merged;
-        });
+        setFormData(prevData => ({ ...prevData, ...initialData }));
     }, [initialData]);
 
     // Update paroquias when region changes
@@ -41,7 +36,6 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('[MemberForm] Submetendo formData:', formData);
         onSubmit(formData);
     };
 
@@ -107,7 +101,6 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
     };
 
     const handleRemovePhoto = () => {
-        console.log('[MemberForm] Removendo foto do formData');
         setFormData(prev => ({ ...prev, foto_url: undefined }));
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
