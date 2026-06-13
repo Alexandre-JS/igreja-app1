@@ -26,7 +26,7 @@ const AboutModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
       <button className="about-close" onClick={onClose}>
         <IonIcon icon={closeOutline} />
       </button>
-      <div className="about-logo">E</div>
+      <img src="/logoigreja.jpg" alt="Logo" className="about-logo" />
       <h2 className="about-title">Ekklesia</h2>
       <p className="about-subtitle">Sistema de Gestão de Membros</p>
       <div className="about-divider" />
@@ -66,7 +66,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, hasPermission = false
       <div className={`sidemenu ${menuOpen ? 'open' : ''}`}>
         {/* Logo area */}
         <div className="sidemenu-logo">
-          <div className="sidemenu-logo-icon">E</div>
+          <img src="/logoigreja.jpg" alt="Logo" className="sidemenu-logo-icon" />
           <div className="sidemenu-logo-text">
             <span className="sidemenu-app-name">Ekklesia</span>
             <span className="sidemenu-org">ICUM / SNF</span>

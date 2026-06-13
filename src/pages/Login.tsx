@@ -6,10 +6,10 @@ import {
   lockClosedOutline,
   eyeOutline,
   eyeOffOutline,
-  businessOutline,
 } from 'ionicons/icons';
 import { supabase } from '../services/supabase';
 import { showFeedback } from '../services/feedback';
+import { getAuthErrorMessage } from '../utils/errorHandler';
 import './Login.css';
 
 const Login: React.FC = () => {
@@ -55,10 +55,7 @@ const Login: React.FC = () => {
       });
 
       if (error) {
-        const msg = error.message === 'Invalid login credentials'
-          ? 'Email ou senha incorretos'
-          : 'Erro ao fazer login';
-        showFeedback(msg, 'error');
+        showFeedback(getAuthErrorMessage(error), 'error');
       } else if (data?.user) {
         showFeedback('Login realizado com sucesso!', 'success');
         history.push('/app');
@@ -80,7 +77,7 @@ const Login: React.FC = () => {
       <div className="login-card">
         {/* Cabeçalho */}
         <div className="login-header">
-          <IonIcon icon={businessOutline} className="login-logo-icon" />
+          <img src="/logoigreja.jpg" alt="Logo" className="login-logo-icon" />
           <h1 className="app-name">Ekklesia</h1>
           <p className="app-description">Sistema de Gestão de Membros</p>
           <span className="church-tag">ICUM / SNF</span>

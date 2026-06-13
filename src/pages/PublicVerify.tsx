@@ -46,7 +46,8 @@ const PublicVerify: React.FC = () => {
     return (
         <div className="verify-page">
             <div className="verify-header">
-                <span className="verify-logo">⛪ ICUM / SNF</span>
+                <img src="/logoigreja.jpg" alt="Logo" className="verify-logo-img" />
+                <span className="verify-logo">ICUM / SNF</span>
             </div>
 
             <div className="verify-content">
