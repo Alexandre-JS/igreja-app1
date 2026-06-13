@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { supabase } from '../services/supabase';
-import { Member } from '../types/member';
+import { Member, paroquiasPorRegiao } from '../types/member';
 import { showFeedback, confirmAction } from '../services/feedback';
+import { getErrorMessage, SupabaseError } from '../utils/errorHandler';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Pie, Bar } from 'react-chartjs-2';
 import { exportToPDF, exportToExcel } from '../services/export';
@@ -31,6 +32,7 @@ interface MemberTableProps {
 interface FiltersState {
     search: string;
     regiao: string;
+    paroquia: string;
     genero: string;
 }
 
@@ -110,19 +112,28 @@ const MemberTable: React.FC<MemberTableProps> = ({
     );
 };
 
+// Todas as paróquias, usado quando nenhuma região está selecionada
+const todasParoquias = Array.from(
+    new Set(Object.values(paroquiasPorRegiao).flat())
+).sort();
+
 // Componente de filtros
 const FilterBar: React.FC<FilterBarProps> = ({ onSearch, onFilterChange, filters }) => {
+    const paroquiasDisponiveis = filters.regiao
+        ? paroquiasPorRegiao[filters.regiao as keyof typeof paroquiasPorRegiao] || []
+        : todasParoquias;
+
     return (
         <div className="filter-bar">
-            <input 
-                type="text" 
-                placeholder="Buscar por nome..." 
+            <input
+                type="text"
+                placeholder="Buscar por nome..."
                 value={filters.search}
                 onChange={(e) => onSearch(e.target.value)}
                 className="search-input"
             />
             <div className="filters">
-                <select 
+                <select
                     value={filters.regiao}
                     onChange={(e) => onFilterChange('regiao', e.target.value)}
                     className="filter-select"
@@ -134,8 +145,21 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, onFilterChange, filters
                     <option value="SUDUESTE">SUDUESTE</option>
                     <option value="NORTE">NORTE</option>
                 </select>
-                
-                <select 
+
+                <select
+                    value={filters.paroquia}
+                    onChange={(e) => onFilterChange('paroquia', e.target.value)}
+                    className="filter-select"
+                >
+                    <option value="">Todas as paróquias</option>
+                    {paroquiasDisponiveis.map(paroquia => (
+                        <option key={paroquia} value={paroquia}>
+                            {paroquia.trim()}
+                        </option>
+                    ))}
+                </select>
+
+                <select
                     value={filters.genero}
                     onChange={(e) => onFilterChange('genero', e.target.value)}
                     className="filter-select"
@@ -368,6 +392,7 @@ const Members: React.FC = () => {
     const [filters, setFilters] = useState<FiltersState>({
         search: '',
         regiao: '',
+        paroquia: '',
         genero: '',
     });
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -376,9 +401,10 @@ const Members: React.FC = () => {
     const totalPages = Math.ceil(totalCount / rowsPerPage);
 
     const applyFilters = (query: any, f: FiltersState) => {
-        if (f.search) query = query.ilike('nome_completo', `%${f.search}%`);
-        if (f.regiao)  query = query.eq('regiao', f.regiao);
-        if (f.genero)  query = query.eq('genero', f.genero);
+        if (f.search)   query = query.ilike('nome_completo', `%${f.search}%`);
+        if (f.regiao)   query = query.eq('regiao', f.regiao);
+        if (f.paroquia) query = query.eq('paroquia', f.paroquia);
+        if (f.genero)   query = query.eq('genero', f.genero);
         return query;
     };
 
@@ -407,7 +433,8 @@ const Members: React.FC = () => {
             setAllFilteredMembers(allResult.data || []);
             setTotalCount(allResult.count || 0);
         } catch (error) {
-            showFeedback('Erro ao carregar membros', 'error');
+            console.error('Erro ao carregar membros:', error);
+            showFeedback(getErrorMessage(error as SupabaseError), 'error');
         } finally {
             setIsLoading(false);
         }
@@ -433,7 +460,8 @@ const Members: React.FC = () => {
             await loadMembers(currentPage, rowsPerPage, filters);
             showFeedback('Membro removido com sucesso', 'success');
         } catch (error) {
-            showFeedback('Erro ao remover membro', 'error');
+            console.error('Erro ao remover membro:', error);
+            showFeedback(getErrorMessage(error as SupabaseError), 'error');
         } finally {
             setIsLoading(false);
         }
@@ -451,6 +479,10 @@ const Members: React.FC = () => {
 
     const handleFilterChange = (filterName: string, value: string) => {
         const newFilters = { ...filters, [filterName]: value };
+        // Trocar de região invalida a paróquia selecionada anteriormente
+        if (filterName === 'regiao') {
+            newFilters.paroquia = '';
+        }
         setFilters(newFilters);
         setCurrentPage(1);
         loadMembers(1, rowsPerPage, newFilters);
@@ -468,7 +500,7 @@ const Members: React.FC = () => {
     };
 
     const clearFilters = () => {
-        const cleared = { search: '', regiao: '', genero: '' };
+        const cleared = { search: '', regiao: '', paroquia: '', genero: '' };
         setFilters(cleared);
         setCurrentPage(1);
         loadMembers(1, rowsPerPage, cleared);
@@ -536,7 +568,7 @@ const Members: React.FC = () => {
                 ) : (
                     <div className="empty-state">
                         <p>Nenhum membro encontrado com os filtros atuais.</p>
-                        {(filters.search || filters.regiao || filters.genero) && (
+                        {(filters.search || filters.regiao || filters.paroquia || filters.genero) && (
                             <button className="clear-filters-btn" onClick={clearFilters}>
                                 Limpar filtros
                             </button>

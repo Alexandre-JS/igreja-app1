@@ -1,4 +1,4 @@
-interface SupabaseError {
+export interface SupabaseError {
     code: string;
     message: string;
     details?: string | null;
@@ -7,7 +7,7 @@ interface SupabaseError {
 export const getErrorMessage = (error: SupabaseError): string => {
     const errorMessages: Record<string, string> = {
         '23502': 'Campo obrigatório não preenchido',
-        '23505': 'Este registro já existe',
+        '23505': 'Já existe um membro registado com este nome e data de nascimento',
         'default': 'Ocorreu um erro inesperado'
     };
 

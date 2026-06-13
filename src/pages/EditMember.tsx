@@ -4,6 +4,7 @@ import MemberForm from '../components/MemberForm';
 import { supabase } from '../services/supabase';
 import { Member } from '../types/member';
 import { showFeedback, confirmAction } from '../services/feedback';
+import { getErrorMessage, SupabaseError } from '../utils/errorHandler';
 import './EditMember.css';
 
 // Spinner minimalista
@@ -28,8 +29,7 @@ const EditMember: React.FC = () => {
     const fetchMember = async () => {
         try {
             setIsLoading(true);
-            console.log('Fetching member with ID:', id);
-            
+
             const { data, error } = await supabase
                 .from('members')
                 .select('*')
@@ -50,7 +50,6 @@ const EditMember: React.FC = () => {
                 return;
             }
 
-            console.log('Member data fetched:', data);
             setMember(data);
         } catch (error) {
             console.error('Exception while fetching member:', error);
@@ -62,9 +61,17 @@ const EditMember: React.FC = () => {
     };
 
     const handleSubmit = async (memberData: Partial<Member>) => {
+        const confirmed = await confirmAction(
+            'Confirmar alterações',
+            'Deseja guardar as alterações deste membro?',
+            'Guardar',
+            'Cancelar'
+        );
+        if (!confirmed) return;
+
         try {
             setIsSaving(true);
-            
+
             const { error } = await supabase
                 .from('members')
                 .update({
@@ -74,18 +81,19 @@ const EditMember: React.FC = () => {
                 .eq('id', id);
 
             if (error) {
-                showFeedback('Erro ao atualizar membro', 'error');
+                showFeedback(getErrorMessage(error as SupabaseError), 'error');
                 return;
             }
 
             showFeedback('Membro atualizado com sucesso!', 'success');
             setMember(prev => prev ? { ...prev, ...memberData } : null);
-            
+
             setTimeout(() => {
                 history.push('/app/members');
             }, 1500);
         } catch (error) {
-            showFeedback('Não foi possível completar a atualização', 'error');
+            console.error('Erro ao atualizar membro:', error);
+            showFeedback(getErrorMessage(error as SupabaseError), 'error');
         } finally {
             setIsSaving(false);
         }
@@ -115,14 +123,15 @@ const EditMember: React.FC = () => {
                 .eq('id', id);
 
             if (error) {
-                showFeedback('Erro ao excluir membro', 'error');
+                showFeedback(getErrorMessage(error as SupabaseError), 'error');
                 return;
             }
 
             showFeedback('Membro excluído com sucesso', 'success');
             history.push('/app/members');
         } catch (error) {
-            showFeedback('Erro ao processar a exclusão', 'error');
+            console.error('Erro ao excluir membro:', error);
+            showFeedback(getErrorMessage(error as SupabaseError), 'error');
         } finally {
             setIsLoading(false);
         }
@@ -156,9 +165,6 @@ const EditMember: React.FC = () => {
             </div>
         );
     }
-
-    // Add console log to debug member data
-    console.log('Member data to edit:', member);
 
     return (
         <div className="edit-member-page scrollable-content">

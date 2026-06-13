@@ -44,23 +44,16 @@ export const confirmAction = async (
     confirmText: string = 'Confirmar',
     cancelText: string = 'Cancelar'
 ): Promise<boolean> => {
-    return new Promise((resolve) => {
-        const alert = document.createElement('ion-alert');
-        alert.header = header;
-        alert.message = message;
-        alert.buttons = [
-            {
-                text: cancelText,
-                role: 'cancel',
-                handler: () => resolve(false)
-            },
-            {
-                text: confirmText,
-                handler: () => resolve(true)
-            }
-        ];
-
-        document.body.appendChild(alert);
-        alert.present();
+    const alert = await alertController.create({
+        header,
+        message,
+        buttons: [
+            { text: cancelText, role: 'cancel' },
+            { text: confirmText, role: 'confirm' }
+        ]
     });
+
+    await alert.present();
+    const { role } = await alert.onDidDismiss();
+    return role === 'confirm';
 };

@@ -13,7 +13,6 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
     
     // Initialize form data from initialData once on mount, and when initialData changes
     useEffect(() => {
-        console.log('Setting form data from initialData:', initialData);
         setFormData(prevData => ({
             ...prevData,
             ...initialData
