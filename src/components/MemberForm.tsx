@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Area } from 'react-easy-crop';
 import { Member, paroquiasPorRegiao } from '../types/member';
+import { supabase } from '../services/supabase';
+import { showFeedback } from '../services/feedback';
+import { getCroppedImageBlob } from '../utils/cropImage';
+import PhotoCropModal from './PhotoCropModal';
+import './MemberForm.css';
 
 interface MemberFormProps {
     onSubmit: (member: Partial<Member>) => void;
@@ -10,13 +16,18 @@ interface MemberFormProps {
 const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData = {} }) => {
     const [formData, setFormData] = useState<Partial<Member>>({});
     const [paroquias, setParoquias] = useState<string[]>([]);
+    const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+    const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     
     // Initialize form data from initialData once on mount, and when initialData changes
     useEffect(() => {
-        setFormData(prevData => ({
-            ...prevData,
-            ...initialData
-        }));
+        console.log('[MemberForm] initialData recebido:', initialData);
+        setFormData(prevData => {
+            const merged = { ...prevData, ...initialData };
+            console.log('[MemberForm] formData após merge com initialData:', merged);
+            return merged;
+        });
     }, [initialData]);
 
     // Update paroquias when region changes
@@ -30,6 +41,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        console.log('[MemberForm] Submetendo formData:', formData);
         onSubmit(formData);
     };
 
@@ -41,8 +53,105 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
         });
     };
 
+    const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            showFeedback('Selecione um ficheiro de imagem válido', 'warning');
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            showFeedback('A imagem deve ter no máximo 5MB', 'warning');
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => setCropImageSrc(reader.result as string);
+        reader.readAsDataURL(file);
+    };
+
+    const handleCropConfirm = async (cropArea: Area) => {
+        if (!cropImageSrc) return;
+
+        try {
+            setIsUploadingPhoto(true);
+
+            const blob = await getCroppedImageBlob(cropImageSrc, cropArea);
+            const fileName = `${formData.id || crypto.randomUUID()}-${Date.now()}.jpg`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('member-photos')
+                .upload(fileName, blob, { upsert: true, contentType: 'image/jpeg' });
+
+            if (uploadError) throw uploadError;
+
+            const { data } = supabase.storage.from('member-photos').getPublicUrl(fileName);
+            setFormData(prev => ({ ...prev, foto_url: data.publicUrl }));
+            showFeedback('Foto carregada com sucesso', 'success');
+        } catch (error) {
+            console.error('[MemberForm] Erro ao enviar foto:', error);
+            showFeedback('Erro ao enviar a foto. Tente novamente.', 'error');
+        } finally {
+            setIsUploadingPhoto(false);
+            setCropImageSrc(null);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+    };
+
+    const handleCropCancel = () => {
+        setCropImageSrc(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
+    const handleRemovePhoto = () => {
+        console.log('[MemberForm] Removendo foto do formData');
+        setFormData(prev => ({ ...prev, foto_url: undefined }));
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
     return (
         <form onSubmit={handleSubmit} className="member-form">
+            {/* Foto do Membro */}
+            <div className="form-section">
+                <h3>Foto do Membro</h3>
+                <div className="photo-upload-row">
+                    <div className="photo-preview">
+                        {formData.foto_url ? (
+                            <img src={formData.foto_url} alt="Foto do membro" />
+                        ) : (
+                            <span className="photo-placeholder">Sem foto</span>
+                        )}
+                    </div>
+                    <div className="photo-upload-actions">
+                        <label className="photo-upload-btn">
+                            {isUploadingPhoto ? 'Enviando...' : 'Escolher foto'}
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                onChange={handlePhotoChange}
+                                disabled={isUploadingPhoto}
+                                hidden
+                            />
+                        </label>
+                        {formData.foto_url && (
+                            <button
+                                type="button"
+                                className="photo-remove-btn"
+                                onClick={handleRemovePhoto}
+                                disabled={isUploadingPhoto}
+                            >
+                                Remover foto
+                            </button>
+                        )}
+                        <p className="step-hint">Formatos de imagem, até 5MB. Depois de escolher, ajuste o enquadramento da foto.</p>
+                    </div>
+                </div>
+            </div>
+
             {/* Informações Pessoais */}
             <div className="form-section">
                 <h3>Informações Pessoais</h3>
@@ -229,15 +338,24 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit, onCancel, initialData
                 </button>
                 
                 {onCancel && (
-                    <button 
-                        type="button" 
-                        className="cancel-btn form-cancel-btn" 
+                    <button
+                        type="button"
+                        className="cancel-btn form-cancel-btn"
                         onClick={onCancel}
                     >
                         Cancelar
                     </button>
                 )}
             </div>
+
+            {cropImageSrc && (
+                <PhotoCropModal
+                    imageSrc={cropImageSrc}
+                    onConfirm={handleCropConfirm}
+                    onCancel={handleCropCancel}
+                    isSaving={isUploadingPhoto}
+                />
+            )}
         </form>
     );
 };

@@ -16,6 +16,7 @@ const UserManagement = lazy(() => import('./pages/UserManagement'));
 const ViewMember = lazy(() => import('./pages/ViewMember'));
 const About = lazy(() => import('./pages/About'));
 const PublicRegister = lazy(() => import('./pages/PublicRegister'));
+const PublicVerify = lazy(() => import('./pages/PublicVerify'));
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -123,6 +124,8 @@ const App: React.FC = () => {
             <Route path="/register" exact>
               {isAuthenticated ? <Redirect to="/app/home" /> : <PublicRegister />}
             </Route>
+
+            <Route path="/verificar/:id" exact component={PublicVerify} />
 
             <Route path="/app">
               {!isAuthenticated ? (

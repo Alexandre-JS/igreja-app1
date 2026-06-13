@@ -61,24 +61,33 @@ const EditMember: React.FC = () => {
     };
 
     const handleSubmit = async (memberData: Partial<Member>) => {
+        console.log('[EditMember] handleSubmit recebido memberData:', memberData);
+
         const confirmed = await confirmAction(
             'Confirmar alterações',
             'Deseja guardar as alterações deste membro?',
             'Guardar',
             'Cancelar'
         );
+        console.log('[EditMember] Confirmação do utilizador:', confirmed);
         if (!confirmed) return;
 
         try {
             setIsSaving(true);
 
-            const { error } = await supabase
+            const updatePayload = {
+                ...memberData,
+                updated_at: new Date().toISOString()
+            };
+            console.log('[EditMember] Enviando update para Supabase:', updatePayload);
+
+            const { error, data } = await supabase
                 .from('members')
-                .update({
-                    ...memberData,
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', id);
+                .update(updatePayload)
+                .eq('id', id)
+                .select();
+
+            console.log('[EditMember] Resultado do update:', { data, error });
 
             if (error) {
                 showFeedback(getErrorMessage(error as SupabaseError), 'error');
