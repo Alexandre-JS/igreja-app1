@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../services/supabase';
 import { showFeedback, confirmAction } from '../services/feedback';
+import { getAuthErrorMessage, getErrorMessage, SupabaseError } from '../utils/errorHandler';
 import './UserManagement.css';
 
 // Interface para usuário
@@ -49,43 +50,68 @@ const UserManagement: React.FC = () => {
 
     const handleCreateUser = async (e: React.FormEvent) => {
         e.preventDefault();
-        
-        if (!newUser.email.trim() || !newUser.password.trim()) {
+
+        const email = newUser.email.trim();
+
+        if (!email || !newUser.password.trim()) {
             showFeedback('Email e senha são obrigatórios', 'warning');
             return;
         }
-        
+
+        if (newUser.password.trim().length < 6) {
+            showFeedback('A senha deve ter pelo menos 6 caracteres', 'warning');
+            return;
+        }
+
         try {
             setIsLoading(true);
-            
+
             // Criar usuário na autenticação do Supabase
             const { data, error } = await supabase.auth.signUp({
-                email: newUser.email,
+                email,
                 password: newUser.password,
                 options: {
                     data: { role: newUser.role }
                 }
             });
 
-            if (error) throw error;
+            if (error) {
+                showFeedback(getAuthErrorMessage(error), 'error');
+                return;
+            }
 
             if (!data.user) {
-                throw new Error('Falha ao criar usuário');
+                showFeedback('Não foi possível criar o usuário. Tente novamente.', 'error');
+                return;
             }
 
             // Adicionar à tabela de usuários
-            await supabase.from('users').insert([{
+            const { error: insertError } = await supabase.from('users').insert([{
                 id: data.user.id,
-                email: newUser.email,
+                email,
                 role: newUser.role,
                 created_at: new Date()
             }]);
 
-            showFeedback('Usuário criado com sucesso!', 'success');
+            if (insertError) {
+                showFeedback(getErrorMessage(insertError as SupabaseError), 'error');
+                return;
+            }
+
+            if (!data.session) {
+                showFeedback(
+                    'Usuário criado! Foi enviado um email de confirmação para ' + email + '. O acesso só funcionará após a confirmação.',
+                    'success',
+                    6000
+                );
+            } else {
+                showFeedback('Usuário criado com sucesso!', 'success');
+            }
+
             setNewUser({ email: '', password: '', role: 'user' });
             fetchUsers();
-        } catch (error: any) {
-            showFeedback(`Erro ao criar usuário: ${error.message}`, 'error');
+        } catch (error) {
+            showFeedback(getAuthErrorMessage(error), 'error');
             console.error('Error creating user:', error);
         } finally {
             setIsLoading(false);
@@ -113,7 +139,7 @@ const UserManagement: React.FC = () => {
             setEditMode(null);
             fetchUsers();
         } catch (error) {
-            showFeedback('Erro ao atualizar função', 'error');
+            showFeedback(getErrorMessage(error as SupabaseError), 'error');
             console.error('Error updating role:', error);
         } finally {
             setIsLoading(false);
@@ -144,7 +170,7 @@ const UserManagement: React.FC = () => {
             showFeedback('Usuário removido com sucesso!', 'success');
             fetchUsers();
         } catch (error) {
-            showFeedback('Erro ao remover usuário', 'error');
+            showFeedback(getErrorMessage(error as SupabaseError), 'error');
             console.error('Error deleting user:', error);
         } finally {
             setIsLoading(false);

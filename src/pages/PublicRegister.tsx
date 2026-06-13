@@ -120,7 +120,7 @@ const PublicRegister: React.FC = () => {
       case 0:
         return (
           <div className={`register-step ${animClass}`} key={0}>
-            <div className="welcome-icon-box">⛪</div>
+            <img src="/logoigreja.jpg" alt="Logo" className="welcome-icon-box" />
             <h1 className="welcome-title">Bem-vindo à família ICUM / SNF</h1>
             <p className="welcome-text">
               Este formulário serve para registar os seus dados como membro da nossa comunidade.
@@ -363,7 +363,10 @@ const PublicRegister: React.FC = () => {
       </div>
 
       <div className="register-header">
-        <span className="register-logo">⛪ Ekklesia</span>
+        <div className="register-brand">
+          <img src="/logoigreja.jpg" alt="Logo" className="register-logo-img" />
+          <span className="register-logo">Ekklesia</span>
+        </div>
         <Link to="/login" className="register-header-link">Já tem conta?</Link>
       </div>
 

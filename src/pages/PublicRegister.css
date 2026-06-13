@@ -31,6 +31,19 @@
   flex-shrink: 0;
 }
 
+.register-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.register-logo-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .register-logo {
   font-size: 1rem;
   font-weight: 700;
@@ -292,10 +305,7 @@
   height: 60px;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.9rem;
+  object-fit: cover;
   margin-bottom: 1.25rem;
 }
 

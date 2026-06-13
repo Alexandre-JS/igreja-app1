@@ -101,9 +101,11 @@
 }
 
 .login-logo-icon {
-  font-size: 3rem;
-  color: #4e73df;
-  margin-bottom: 0.6rem;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 0.6rem;
   display: block;
 }
 
