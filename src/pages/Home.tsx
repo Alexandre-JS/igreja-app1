@@ -3,6 +3,7 @@ import { useHistory } from 'react-router';
 import { supabase } from '../services/supabase';
 import { Member } from '../types/member';
 import { showFeedback } from '../services/feedback';
+import { getErrorMessage, SupabaseError } from '../utils/errorHandler';
 import './Home.css';
 
 // Componente simples de spinner
@@ -267,7 +268,7 @@ const Home: React.FC = () => {
       
     } catch (error) {
       console.error('Erro ao carregar dados do dashboard:', error);
-      showFeedback('Erro ao carregar estatísticas', 'error');
+      showFeedback(getErrorMessage(error as SupabaseError), 'error');
     } finally {
       setIsLoading(false);
     }

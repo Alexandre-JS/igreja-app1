@@ -1,8 +1,20 @@
 import { supabase } from '../services/supabase';
 
+// O role oficial vem da tabela `users` (protegida por RLS no servidor).
+// user_metadata é editável pelo próprio utilizador e serve apenas como
+// fallback para contas ainda não migradas para a tabela `users`.
+// Ver supabase/rls_policies.sql para a aplicação da fonte de verdade no servidor.
 export const getUserRole = async (): Promise<string> => {
     const { data: { user } } = await supabase.auth.getUser();
-    return user?.user_metadata?.role || 'user';
+    if (!user) return 'user';
+
+    const { data } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+    return data?.role || user.user_metadata?.role || 'user';
 };
 
 // Apenas admin e super_admin podem criar/editar/eliminar membros

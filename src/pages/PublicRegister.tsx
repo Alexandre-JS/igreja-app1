@@ -4,6 +4,7 @@ import { IonIcon } from '@ionic/react';
 import { arrowForwardOutline, arrowBackOutline, checkmarkOutline } from 'ionicons/icons';
 import { supabase } from '../services/supabase';
 import { showFeedback } from '../services/feedback';
+import { getErrorMessage } from '../utils/errorHandler';
 import { paroquiasPorRegiao } from '../types/member';
 import './PublicRegister.css';
 
@@ -53,6 +54,24 @@ const PublicRegister: React.FC = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
+      // Verificar se já existe um membro com o mesmo nome e data de nascimento,
+      // para evitar registos duplicados da mesma pessoa.
+      const { data: jaExiste, error: checkError } = await supabase.rpc('check_member_exists', {
+        p_nome_completo: form.nomeCompleto.trim(),
+        p_data_nascimento: form.dataNascimento,
+      });
+
+      if (checkError) {
+        console.error('Erro ao verificar duplicados:', checkError);
+      } else if (jaExiste) {
+        showFeedback(
+          'Já existe um registo com este nome e data de nascimento. Se já se registou antes, não precisa de submeter novamente. Se isto for um engano, contacte um administrador.',
+          'warning',
+          6000
+        );
+        return;
+      }
+
       const { error } = await supabase.from('members').insert([{
         nome_completo: form.nomeCompleto.trim(),
         data_nascimento: form.dataNascimento,
@@ -66,7 +85,7 @@ const PublicRegister: React.FC = () => {
 
       if (error) {
         console.error('Supabase insert error:', error);
-        showFeedback(`Erro: ${error.message}`, 'error');
+        showFeedback(getErrorMessage(error), 'error');
         return;
       }
       goNext();

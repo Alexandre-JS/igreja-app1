@@ -3,7 +3,8 @@ import { useHistory } from 'react-router';
 import MemberForm from '../components/MemberForm';
 import { supabase } from '../services/supabase';
 import { Member } from '../types/member';
-import { showFeedback } from '../services/feedback';
+import { showFeedback, confirmAction } from '../services/feedback';
+import { getErrorMessage, SupabaseError } from '../utils/errorHandler';
 import './AddMember.css';
 
 // Spinner minimalista
@@ -14,13 +15,21 @@ const AddMember = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (memberData: Partial<Member>) => {
+    if (!memberData.data_nascimento) {
+      showFeedback('Por favor, preencha a Data de Nascimento', 'warning');
+      return;
+    }
+
+    const confirmed = await confirmAction(
+      'Confirmar cadastro',
+      'Deseja guardar este novo membro?',
+      'Guardar',
+      'Cancelar'
+    );
+    if (!confirmed) return;
+
     try {
       setIsLoading(true);
-
-      if (!memberData.data_nascimento) {
-        showFeedback('Por favor, preencha a Data de Nascimento', 'warning');
-        return;
-      }
 
       const { error } = await supabase
         .from('members')
@@ -31,18 +40,15 @@ const AddMember = () => {
         .select();
 
       if (error) {
-        const errorMessage = error.code === '23502' 
-          ? 'Por favor, preencha todos os campos obrigatórios'
-          : 'Ocorreu um erro ao cadastrar o membro';
-          
-        showFeedback(errorMessage, 'error');
+        showFeedback(getErrorMessage(error as SupabaseError), 'error');
         return;
       }
 
       showFeedback('Membro cadastrado com sucesso!', 'success');
       history.push('/app/members');
     } catch (err) {
-      showFeedback('Não foi possível completar o cadastro. Tente novamente.', 'error');
+      console.error('Erro ao cadastrar membro:', err);
+      showFeedback(getErrorMessage(err as SupabaseError), 'error');
     } finally {
       setIsLoading(false);
     }
