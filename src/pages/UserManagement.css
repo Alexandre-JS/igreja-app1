@@ -10,14 +10,14 @@
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border);
 }
 
 .page-header h1 {
   margin: 0;
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-dark);
 }
 
 .user-content {
@@ -30,7 +30,7 @@
 
 /* Card compartilhado */
 .card {
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -40,9 +40,9 @@
   margin: 0 0 20px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-dark);
   padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border);
 }
 
 /* Formulário de novo usuário */
@@ -66,12 +66,12 @@
 
 .form-group label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-medium);
 }
 
 .form-input, .form-select, .edit-select {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 4px;
   font-size: 14px;
 }
@@ -107,17 +107,17 @@
 .users-table td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border);
 }
 
 .users-table th {
-  color: #666;
+  color: var(--text-medium);
   font-weight: 600;
-  background-color: #f9f9f9;
+  background-color: var(--bg-subtle);
 }
 
 .users-table tr:hover {
-  background-color: #f8f9ff;
+  background-color: var(--bg-subtle);
 }
 
 .actions {
@@ -137,8 +137,8 @@
 }
 
 .edit-button {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: var(--bg-subtle);
+  color: var(--text-dark);
 }
 
 .delete-button {
@@ -152,8 +152,8 @@
 }
 
 .cancel-button {
-  background-color: #f0f0f0;
-  color: #666;
+  background-color: var(--bg-subtle);
+  color: var(--text-medium);
 }
 
 /* Badge de função */
@@ -176,7 +176,7 @@
 
 .no-users {
   text-align: center;
-  color: #777;
+  color: var(--text-medium);
   padding: 20px;
 }
 

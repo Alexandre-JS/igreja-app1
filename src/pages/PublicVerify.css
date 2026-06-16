@@ -39,7 +39,7 @@
 
 .verify-card {
   width: 100%;
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 1rem;
   padding: 2rem 1.5rem;
   display: flex;
@@ -66,7 +66,7 @@
   width: 88px;
   height: 88px;
   border-radius: 50%;
-  background: #f1f5f9;
+  background: var(--bg-subtle);
   border: 3px solid #4e73df;
   display: flex;
   align-items: center;
@@ -87,7 +87,7 @@
 .verify-card h2 {
   margin: 0 0 0.25rem;
   font-size: 1.2rem;
-  color: #2d3748;
+  color: var(--text-dark);
 }
 
 .verify-subtitle {
@@ -99,7 +99,7 @@
 
 .verify-details {
   width: 100%;
-  background: #f8f9fc;
+  background: var(--bg-page);
   border-radius: 0.6rem;
   padding: 0.85rem 1rem;
   display: flex;
@@ -111,7 +111,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.9rem;
-  color: #5a5c69;
+  color: var(--text-medium);
 }
 
 .verify-label {
@@ -120,5 +120,5 @@
 
 .verify-value {
   font-weight: 600;
-  color: #2d3748;
+  color: var(--text-dark);
 }

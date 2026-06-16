@@ -32,6 +32,16 @@
   --bg-page: #f8f9fc;
   --bg-card: #ffffff;
   --bg-subtle: #f0f3fd;
+  --bg-input: #ffffff;
+
+  /* Ionic background/text aliases (usados por toasts, alerts, etc.) */
+  --ion-background-color: #f8f9fc;
+  --ion-background-color-rgb: 248, 249, 252;
+  --ion-text-color: #2d3748;
+  --ion-text-color-rgb: 45, 55, 72;
+  --ion-card-background: #ffffff;
+  --ion-item-background: #ffffff;
+  --ion-toolbar-background: #ffffff;
 
   /* ── Texto ── */
   --text-dark: #2d3748;
@@ -68,6 +78,61 @@
   /* ── Gradientes ── */
   --gradient-primary: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
   --gradient-page: linear-gradient(160deg, #f0f3fd 0%, #f8f9fc 100%);
+}
+
+/* =============================================
+   TEMA ESCURO
+   Aplicado via <html data-theme="dark"> (ver src/utils/theme.ts).
+   O modo "sistema" é resolvido em JS, que define o data-theme,
+   por isso aqui só precisamos do override explícito de "dark".
+   ============================================= */
+html[data-theme="dark"] {
+  /* ── Primária (mantém o azul da marca, ajusta tints) ── */
+  --primary-light: rgba(78, 115, 223, 0.18);
+  --primary-border: rgba(78, 115, 223, 0.45);
+
+  /* ── Fundos ── */
+  --bg-page: #0f1521;
+  --bg-card: #1a2130;
+  --bg-subtle: #232c3d;
+  --bg-input: #232c3d;
+
+  /* ── Texto ── */
+  --text-dark: #e7ebf3;
+  --text-medium: #aeb6c7;
+  --text-muted: #8590a3;
+  --text-light: #6b7589;
+
+  /* ── Bordas ── */
+  --border: #2c3447;
+  --border-input: #3a4459;
+
+  /* ── Sombras (mais profundas sobre fundo escuro) ── */
+  --shadow-card: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.45);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 0 3px rgba(78, 115, 223, 0.30);
+
+  /* ── Gradientes ── */
+  --gradient-page: linear-gradient(160deg, #151c2b 0%, #0f1521 100%);
+
+  /* ── Ionic ── */
+  --ion-background-color: #0f1521;
+  --ion-background-color-rgb: 15, 21, 33;
+  --ion-text-color: #e7ebf3;
+  --ion-text-color-rgb: 231, 235, 243;
+  --ion-card-background: #1a2130;
+  --ion-item-background: #1a2130;
+  --ion-toolbar-background: #1a2130;
+  --ion-color-light: #232c3d;
+  --ion-color-dark: #e7ebf3;
+}
+
+/* Esquema de cor nativo do browser (scrollbars, inputs de data, etc.) */
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+html[data-theme="light"] {
+  color-scheme: light;
 }
 
 /* ── Reset global ── */

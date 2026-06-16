@@ -61,15 +61,12 @@ const EditMember: React.FC = () => {
     };
 
     const handleSubmit = async (memberData: Partial<Member>) => {
-        console.log('[EditMember] handleSubmit recebido memberData:', memberData);
-
         const confirmed = await confirmAction(
             'Confirmar alterações',
             'Deseja guardar as alterações deste membro?',
             'Guardar',
             'Cancelar'
         );
-        console.log('[EditMember] Confirmação do utilizador:', confirmed);
         if (!confirmed) return;
 
         try {
@@ -79,7 +76,6 @@ const EditMember: React.FC = () => {
                 ...memberData,
                 updated_at: new Date().toISOString()
             };
-            console.log('[EditMember] Enviando update para Supabase:', updatePayload);
 
             const { error, data } = await supabase
                 .from('members')
@@ -87,10 +83,20 @@ const EditMember: React.FC = () => {
                 .eq('id', id)
                 .select();
 
-            console.log('[EditMember] Resultado do update:', { data, error });
-
             if (error) {
                 showFeedback(getErrorMessage(error as SupabaseError), 'error');
+                return;
+            }
+
+            // O Supabase não devolve erro quando uma política de RLS impede a
+            // escrita: a operação simplesmente afeta 0 linhas. Sem esta
+            // verificação a app mostraria "sucesso" sem nada ter mudado.
+            if (!data || data.length === 0) {
+                showFeedback(
+                    'Não foi possível guardar as alterações. A sua conta não tem permissão para editar membros (verifique se existe na tabela "users" do Supabase com role admin/super_admin).',
+                    'error',
+                    6000
+                );
                 return;
             }
 
@@ -126,13 +132,25 @@ const EditMember: React.FC = () => {
             if (!willDelete) return;
 
             setIsLoading(true);
-            const { error } = await supabase
+            const { error, data } = await supabase
                 .from('members')
                 .delete()
-                .eq('id', id);
+                .eq('id', id)
+                .select();
 
             if (error) {
                 showFeedback(getErrorMessage(error as SupabaseError), 'error');
+                return;
+            }
+
+            // Tal como no update, uma exclusão bloqueada por RLS não devolve
+            // erro — apenas afeta 0 linhas. Confirmar que algo foi removido.
+            if (!data || data.length === 0) {
+                showFeedback(
+                    'Não foi possível excluir. A sua conta não tem permissão para apagar membros (verifique se existe na tabela "users" do Supabase com role admin/super_admin).',
+                    'error',
+                    6000
+                );
                 return;
             }
 
