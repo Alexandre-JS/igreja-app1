@@ -10,7 +10,7 @@
 }
 
 .photo-crop-content {
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 0.75rem;
   padding: 1.5rem;
   width: 100%;
@@ -23,13 +23,13 @@
 .photo-crop-content h3 {
   margin: 0;
   font-size: 1.1rem;
-  color: #1a365d;
+  color: var(--text-dark);
 }
 
 .photo-crop-hint {
   margin: 0;
   font-size: 0.8rem;
-  color: #718096;
+  color: var(--text-medium);
 }
 
 .photo-crop-area {
@@ -49,7 +49,7 @@
 
 .photo-crop-zoom label {
   font-size: 0.8rem;
-  color: #5a5c69;
+  color: var(--text-medium);
 }
 
 .photo-crop-zoom input[type="range"] {
@@ -86,9 +86,9 @@
 }
 
 .photo-crop-cancel-btn {
-  background-color: #f8f9fc;
-  color: #5a5c69;
-  border: 1px solid #d1d3e2;
+  background-color: var(--bg-page);
+  color: var(--text-medium);
+  border: 1px solid var(--border-input);
   border-radius: 0.35rem;
   padding: 0.6rem 1rem;
   font-size: 0.85rem;
@@ -98,5 +98,5 @@
 }
 
 .photo-crop-cancel-btn:hover {
-  background-color: #eaecf4;
+  background-color: var(--border);
 }

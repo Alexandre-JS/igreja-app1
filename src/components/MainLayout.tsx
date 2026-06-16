@@ -10,8 +10,11 @@ import {
   logOutOutline,
   menuOutline,
   closeOutline,
+  moonOutline,
+  sunnyOutline,
 } from 'ionicons/icons';
 import { supabase } from '../services/supabase';
+import { getEffectiveTheme, toggleTheme, type EffectiveTheme } from '../utils/theme';
 import './MainLayout.css';
 
 interface MainLayoutProps {
@@ -47,6 +50,7 @@ const AboutModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
 const MainLayout: React.FC<MainLayoutProps> = ({ children, hasPermission = false, hasUserManagement = false }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const [theme, setTheme] = useState<EffectiveTheme>(getEffectiveTheme());
   const history = useHistory();
   const location = useLocation();
 
@@ -118,6 +122,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, hasPermission = false
         {/* Fixed bottom section */}
         <div className="sidemenu-bottom">
           <div className="menu-separator" />
+          <div className="menu-item" onClick={() => setTheme(toggleTheme())}>
+            <IonIcon icon={theme === 'dark' ? sunnyOutline : moonOutline} className="menu-icon" />
+            <span className="menu-text">{theme === 'dark' ? 'Tema claro' : 'Tema escuro'}</span>
+          </div>
           <div className="menu-item" onClick={() => { setShowAbout(true); if (window.innerWidth <= 768) setMenuOpen(false); }}>
             <IonIcon icon={informationCircleOutline} className="menu-icon" />
             <span className="menu-text">Sobre o Sistema</span>

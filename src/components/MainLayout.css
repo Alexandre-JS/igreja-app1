@@ -271,7 +271,7 @@
 
 .about-modal {
   position: relative;
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: 16px;
   padding: 2rem 2rem 1.5rem;
   width: 100%;

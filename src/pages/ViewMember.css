@@ -14,7 +14,7 @@
 }
 
 .page-header h1 {
-  color: #333;
+  color: var(--text-dark);
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
@@ -42,9 +42,9 @@
 }
 
 .back-btn {
-  background-color: #f8f9fc;
-  color: #5a5c69;
-  border: 1px solid #d1d3e2;
+  background-color: var(--bg-page);
+  color: var(--text-medium);
+  border: 1px solid var(--border-input);
   border-radius: 4px;
   padding: 0.6rem 1rem;
   font-size: 0.85rem;
@@ -54,7 +54,7 @@
 }
 
 .back-btn:hover {
-  background-color: #eaecf4;
+  background-color: var(--border);
 }
 
 .card-btn {
@@ -145,9 +145,9 @@
 }
 
 .card-close-btn {
-  background-color: #f8f9fc;
-  color: #5a5c69;
-  border: 1px solid #d1d3e2;
+  background-color: var(--bg-page);
+  color: var(--text-medium);
+  border: 1px solid var(--border-input);
   border-radius: 4px;
   padding: 0.6rem 1.25rem;
   font-size: 0.85rem;
@@ -157,12 +157,12 @@
 }
 
 .card-close-btn:hover {
-  background-color: #eaecf4;
+  background-color: var(--border);
 }
 
 /* Member details */
 .member-details {
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 8px;
   box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
   overflow: hidden;
@@ -172,8 +172,8 @@
   display: flex;
   align-items: center;
   padding: 1.5rem;
-  background-color: #f8f9fc;
-  border-bottom: 1px solid #e3e6f0;
+  background-color: var(--bg-page);
+  border-bottom: 1px solid var(--border);
 }
 
 .member-avatar.large {
@@ -200,7 +200,7 @@
 .member-title h2 {
   margin: 0;
   font-size: 1.5rem;
-  color: #333;
+  color: var(--text-dark);
 }
 
 .member-subtitle {
@@ -210,8 +210,8 @@
 }
 
 .tag {
-  background-color: #eaecf4;
-  color: #5a5c69;
+  background-color: var(--border);
+  color: var(--text-medium);
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -220,7 +220,7 @@
 /* Details sections */
 .details-section {
   padding: 1.5rem;
-  border-bottom: 1px solid #e3e6f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .details-section h3 {
@@ -246,26 +246,26 @@
 
 .detail-label {
   font-size: 0.8rem;
-  color: #858796;
+  color: var(--text-muted);
   margin-bottom: 0.25rem;
 }
 
 .detail-value {
   font-size: 1rem;
-  color: #333;
+  color: var(--text-dark);
 }
 
 /* Footer */
 .details-footer {
   padding: 1rem 1.5rem;
-  background-color: #f8f9fc;
-  border-top: 1px solid #e3e6f0;
+  background-color: var(--bg-page);
+  border-top: 1px solid var(--border);
 }
 
 .record-info {
   margin: 0;
   font-size: 0.8rem;
-  color: #858796;
+  color: var(--text-muted);
   text-align: right;
 }
 
@@ -285,7 +285,7 @@
 .error-container {
   text-align: center;
   padding: 3rem 1rem;
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 8px;
   box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
   margin-top: 2rem;
@@ -298,7 +298,7 @@
 
 .error-container p {
   margin-bottom: 1.5rem;
-  color: #718096;
+  color: var(--text-medium);
 }
 
 .primary-button {
